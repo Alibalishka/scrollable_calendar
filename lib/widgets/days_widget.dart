@@ -92,7 +92,8 @@ class DaysWidget extends StatelessWidget {
 
         final dayValues = DayValues(
           day: day,
-          isFirstDayOfWeek: day.weekday == cleanCalendarController.weekdayStart,
+          // isFirstDayOfWeek: day.weekday == cleanCalendarController.weekdayStart,
+          isFirstDayOfWeek: day.weekday == 6,
           isLastDayOfWeek: day.weekday == cleanCalendarController.weekdayEnd,
           isSelected: isSelected,
           maxDate: cleanCalendarController.maxDate,
