@@ -80,6 +80,9 @@ class ScrollableCleanCalendar extends StatefulWidget {
   /// The controller of ScrollableCleanCalendar
   final CleanCalendarController calendarController;
 
+  /// The MutiSelect Option
+  final bool isMultiSelect;
+
   const ScrollableCleanCalendar({
     this.locale = 'en',
     this.scrollController,
@@ -104,6 +107,7 @@ class ScrollableCleanCalendar extends StatefulWidget {
     this.dayTextStyle,
     this.dayRadius = 6,
     required this.calendarController,
+    this.isMultiSelect = false,
   }) : assert(layout != null ||
             (monthBuilder != null &&
                 weekdayBuilder != null &&
@@ -212,6 +216,7 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
                   dayDisableColor: widget.dayDisableColor,
                   radius: widget.dayRadius,
                   textStyle: widget.dayTextStyle,
+                  isMultiSelect: widget.isMultiSelect,
                 );
               },
             )

@@ -46,6 +46,9 @@ class CleanCalendarController extends ChangeNotifier {
   /// The item scroll controller
   final ItemScrollController itemScrollController = ItemScrollController();
 
+  /// MultiSelectedData data
+  List<DateTime> multiSelectedDate = [];
+
   CleanCalendarController({
     required this.minDate,
     required this.maxDate,
@@ -109,6 +112,17 @@ class CleanCalendarController extends ChangeNotifier {
     return daysOfWeek;
   }
 
+  void onDaysClick(DateTime date, {bool update = true}) {
+    if (multiSelectedDate.contains(date)) {
+      multiSelectedDate.remove(date);
+    } else {
+      multiSelectedDate.add(date);
+    }
+    if (update) {
+      notifyListeners();
+    }
+  }
+
   void onDayClick(DateTime date, {bool update = true}) {
     if (rangeMode) {
       if (rangeMinDate == null || rangeMaxDate != null) {
@@ -141,7 +155,7 @@ class CleanCalendarController extends ChangeNotifier {
   void clearSelectedDates() {
     rangeMaxDate = null;
     rangeMinDate = null;
-
+    multiSelectedDate.clear();
     notifyListeners();
   }
 

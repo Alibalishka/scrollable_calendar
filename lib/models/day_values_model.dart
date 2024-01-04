@@ -11,6 +11,9 @@ class DayValues {
   /// The first day in the row for each week
   final bool isFirstDayOfWeek;
 
+   /// The saturday day in the row for each week
+  final bool isSaturdayDayOfWeek;
+
   /// The last day in the row for each week, but just the item seven
   final bool isLastDayOfWeek;
 
@@ -32,6 +35,7 @@ class DayValues {
     required this.text,
     required this.isSelected,
     required this.isFirstDayOfWeek,
+    required this.isSaturdayDayOfWeek,
     required this.isLastDayOfWeek,
     this.selectedMinDate,
     this.selectedMaxDate,

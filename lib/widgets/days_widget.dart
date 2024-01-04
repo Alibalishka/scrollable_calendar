@@ -21,6 +21,7 @@ class DaysWidget extends StatelessWidget {
   final Color? dayDisableColor;
   final double radius;
   final TextStyle? textStyle;
+  final bool isMultiSelect;
 
   const DaysWidget({
     Key? key,
@@ -37,6 +38,7 @@ class DaysWidget extends StatelessWidget {
     required this.dayDisableColor,
     required this.radius,
     required this.textStyle,
+    required this.isMultiSelect,
   }) : super(key: key);
 
   @override
@@ -76,24 +78,30 @@ class DaysWidget extends StatelessWidget {
 
         bool isSelected = false;
 
-        if (cleanCalendarController.rangeMinDate != null) {
-          if (cleanCalendarController.rangeMinDate != null &&
-              cleanCalendarController.rangeMaxDate != null) {
-            isSelected = day
-                    .isSameDayOrAfter(cleanCalendarController.rangeMinDate!) &&
-                day.isSameDayOrBefore(cleanCalendarController.rangeMaxDate!);
-          } else {
-            isSelected =
-                day.isAtSameMomentAs(cleanCalendarController.rangeMinDate!);
+        if (isMultiSelect) {
+          cleanCalendarController.multiSelectedDate.contains(day)
+              ? isSelected = true
+              : isSelected = false;
+        } else {
+          if (cleanCalendarController.rangeMinDate != null) {
+            if (cleanCalendarController.rangeMinDate != null &&
+                cleanCalendarController.rangeMaxDate != null) {
+              isSelected = day.isSameDayOrAfter(
+                      cleanCalendarController.rangeMinDate!) &&
+                  day.isSameDayOrBefore(cleanCalendarController.rangeMaxDate!);
+            } else {
+              isSelected =
+                  day.isAtSameMomentAs(cleanCalendarController.rangeMinDate!);
+            }
           }
         }
 
         Widget widget;
-
         final dayValues = DayValues(
           day: day,
           // isFirstDayOfWeek: day.weekday == cleanCalendarController.weekdayStart,
-          isFirstDayOfWeek: day.weekday == 6,
+          isFirstDayOfWeek: day.weekday == cleanCalendarController.weekdayStart,
+          isSaturdayDayOfWeek: day.weekday == 6,
           isLastDayOfWeek: day.weekday == cleanCalendarController.weekdayEnd,
           isSelected: isSelected,
           maxDate: cleanCalendarController.maxDate,
@@ -114,18 +122,22 @@ class DaysWidget extends StatelessWidget {
 
         return GestureDetector(
           onTap: () {
-            if (day.isBefore(cleanCalendarController.minDate) &&
-                !day.isSameDay(cleanCalendarController.minDate)) {
-              if (cleanCalendarController.onPreviousMinDateTapped != null) {
-                cleanCalendarController.onPreviousMinDateTapped!(day);
-              }
-            } else if (day.isAfter(cleanCalendarController.maxDate)) {
-              if (cleanCalendarController.onAfterMaxDateTapped != null) {
-                cleanCalendarController.onAfterMaxDateTapped!(day);
-              }
+            if (isMultiSelect) {
+              cleanCalendarController.onDaysClick(day);
             } else {
-              if (!cleanCalendarController.readOnly) {
-                cleanCalendarController.onDayClick(day);
+              if (day.isBefore(cleanCalendarController.minDate) &&
+                  !day.isSameDay(cleanCalendarController.minDate)) {
+                if (cleanCalendarController.onPreviousMinDateTapped != null) {
+                  cleanCalendarController.onPreviousMinDateTapped!(day);
+                }
+              } else if (day.isAfter(cleanCalendarController.maxDate)) {
+                if (cleanCalendarController.onAfterMaxDateTapped != null) {
+                  cleanCalendarController.onAfterMaxDateTapped!(day);
+                }
+              } else {
+                if (!cleanCalendarController.readOnly) {
+                  cleanCalendarController.onDayClick(day);
+                }
               }
             }
           },
@@ -222,7 +234,7 @@ class DaysWidget extends StatelessWidget {
               ? Colors.black
               : Colors.white
           : Theme.of(context).colorScheme.onSurface,
-      fontWeight: values.isFirstDayOfWeek || values.isLastDayOfWeek
+      fontWeight: values.isSaturdayDayOfWeek || values.isLastDayOfWeek
           ? FontWeight.bold
           : null,
     );
@@ -272,16 +284,31 @@ class DaysWidget extends StatelessWidget {
           );
         }
       } else {
-        bgColor = selectedBackgroundColorBetween ??
-            Theme.of(context).colorScheme.primary.withOpacity(.3);
-        txtStyle =
-            (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
-          color:
-              selectedBackgroundColor ?? Theme.of(context).colorScheme.primary,
-          fontWeight: values.isFirstDayOfWeek || values.isLastDayOfWeek
-              ? FontWeight.bold
-              : null,
-        );
+        if (isMultiSelect) {
+          borderRadius = BorderRadius.all(Radius.circular(radius));
+          bgColor =
+              selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
+          txtStyle = txtStyle =
+              (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
+            color: selectedBackgroundColor != null
+                ? selectedBackgroundColor!.computeLuminance() > .5
+                    ? Colors.black
+                    : Colors.white
+                : Theme.of(context).colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+          );
+        } else {
+          bgColor = selectedBackgroundColorBetween ??
+              Theme.of(context).colorScheme.primary.withOpacity(.3);
+          txtStyle =
+              (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
+            color: selectedBackgroundColor ??
+                Theme.of(context).colorScheme.primary,
+            fontWeight: values.isFirstDayOfWeek || values.isLastDayOfWeek
+                ? FontWeight.bold
+                : null,
+          );
+        }
       }
     } else if (values.day.isSameDay(values.minDate)) {
     } else if (values.day.isBefore(values.minDate) ||
