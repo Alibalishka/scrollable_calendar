@@ -32,7 +32,7 @@ class MonthWidget extends StatelessWidget {
     }
 
     return <Layout, Widget Function()>{
-      Layout.DEFAULT: () => _pattern(context, text),
+      // Layout.DEFAULT: () => _pattern(context, text),
       Layout.BEAUTY: () => _beauty(context, text)
     }[layout]!();
   }

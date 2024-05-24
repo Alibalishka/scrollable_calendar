@@ -22,6 +22,8 @@ class DaysWidget extends StatelessWidget {
   final double radius;
   final TextStyle? textStyle;
   final bool isMultiSelect;
+  final List<DateTime> redDays;
+  final Color redDayColor;
 
   const DaysWidget({
     Key? key,
@@ -39,6 +41,8 @@ class DaysWidget extends StatelessWidget {
     required this.radius,
     required this.textStyle,
     required this.isMultiSelect,
+    required this.redDays,
+    required this.redDayColor,
   }) : super(key: key);
 
   @override
@@ -109,13 +113,14 @@ class DaysWidget extends StatelessWidget {
           text: text,
           selectedMaxDate: cleanCalendarController.rangeMaxDate,
           selectedMinDate: cleanCalendarController.rangeMinDate,
+          isRed: redDays.contains(day),
         );
 
         if (dayBuilder != null) {
           widget = dayBuilder!(context, dayValues);
         } else {
           widget = <Layout, Widget Function()>{
-            Layout.DEFAULT: () => _pattern(context, dayValues),
+            // Layout.DEFAULT: () => _pattern(context, dayValues),
             Layout.BEAUTY: () => _beauty(context, dayValues),
           }[layout]!();
         }
@@ -147,86 +152,87 @@ class DaysWidget extends StatelessWidget {
     );
   }
 
-  Widget _pattern(BuildContext context, DayValues values) {
-    Color bgColor = backgroundColor ?? Theme.of(context).colorScheme.surface;
-    TextStyle txtStyle =
-        (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
-      color: backgroundColor != null
-          ? backgroundColor!.computeLuminance() > .5
-              ? Colors.black
-              : Colors.white
-          : Theme.of(context).colorScheme.onSurface,
-    );
+  // Widget _pattern(BuildContext context, DayValues values) {
+  //   Color bgColor = backgroundColor ?? Theme.of(context).colorScheme.surface;
+  //   TextStyle txtStyle =
+  //       (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
+  //     color: backgroundColor != null
+  //         ? backgroundColor!.computeLuminance() > .5
+  //             ? Colors.black
+  //             : Colors.white
+  //         : Theme.of(context).colorScheme.onSurface,
+  //   );
 
-    if (values.isSelected) {
-      if ((values.selectedMinDate != null &&
-              values.day.isSameDay(values.selectedMinDate!)) ||
-          (values.selectedMaxDate != null &&
-              values.day.isSameDay(values.selectedMaxDate!))) {
-        bgColor =
-            selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
-        txtStyle =
-            (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
-          color: selectedBackgroundColor != null
-              ? selectedBackgroundColor!.computeLuminance() > .5
-                  ? Colors.black
-                  : Colors.white
-              : Theme.of(context).colorScheme.onPrimary,
-        );
-      } else {
-        bgColor = selectedBackgroundColorBetween ??
-            Theme.of(context).colorScheme.primary.withOpacity(.3);
-        txtStyle =
-            (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
-          color: selectedBackgroundColor != null &&
-                  selectedBackgroundColor == selectedBackgroundColorBetween
-              ? selectedBackgroundColor!.computeLuminance() > .5
-                  ? Colors.black
-                  : Colors.white
-              : selectedBackgroundColor ??
-                  Theme.of(context).colorScheme.primary,
-        );
-      }
-    } else if (values.day.isSameDay(values.minDate)) {
-      bgColor = Colors.transparent;
-      txtStyle = (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
-        color: selectedBackgroundColor ?? Theme.of(context).colorScheme.primary,
-      );
-    } else if (values.day.isBefore(values.minDate) ||
-        values.day.isAfter(values.maxDate)) {
-      bgColor = disableBackgroundColor ??
-          Theme.of(context).colorScheme.surface.withOpacity(.4);
-      txtStyle = (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
-        color: dayDisableColor ??
-            Theme.of(context).colorScheme.onSurface.withOpacity(.5),
-        decoration: TextDecoration.lineThrough,
-      );
-    }
+  //   if (values.isSelected) {
+  //     if ((values.selectedMinDate != null &&
+  //             values.day.isSameDay(values.selectedMinDate!)) ||
+  //         (values.selectedMaxDate != null &&
+  //             values.day.isSameDay(values.selectedMaxDate!))) {
+  //       bgColor =
+  //           selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
+  //       txtStyle =
+  //           (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
+  //         color: selectedBackgroundColor != null
+  //             ? selectedBackgroundColor!.computeLuminance() > .5
+  //                 ? Colors.black
+  //                 : Colors.white
+  //             : Theme.of(context).colorScheme.onPrimary,
+  //       );
+  //     } else {
+  //       bgColor = selectedBackgroundColorBetween ??
+  //           Theme.of(context).colorScheme.primary.withOpacity(.3);
+  //       txtStyle =
+  //           (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
+  //         color: selectedBackgroundColor != null &&
+  //                 selectedBackgroundColor == selectedBackgroundColorBetween
+  //             ? selectedBackgroundColor!.computeLuminance() > .5
+  //                 ? Colors.black
+  //                 : Colors.white
+  //             : selectedBackgroundColor ??
+  //                 Theme.of(context).colorScheme.primary,
+  //       );
+  //     }
+  //   } else if (values.day.isSameDay(values.minDate)) {
+  //     bgColor = Colors.transparent;
+  //     txtStyle = (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
+  //       color: selectedBackgroundColor ?? Theme.of(context).colorScheme.primary,
+  //     );
+  //   } else if (values.day.isBefore(values.minDate) ||
+  //       values.day.isAfter(values.maxDate)) {
+  //     bgColor = disableBackgroundColor ??
+  //         Theme.of(context).colorScheme.surface.withOpacity(.4);
+  //     txtStyle = (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
+  //       color: dayDisableColor ??
+  //           Theme.of(context).colorScheme.onSurface.withOpacity(.5),
+  //       decoration: TextDecoration.lineThrough,
+  //     );
+  //   }
 
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(radius),
-        border: values.day.isSameDay(values.minDate)
-            ? Border.all(
-                color: selectedBackgroundColor ??
-                    Theme.of(context).colorScheme.primary,
-                width: 2,
-              )
-            : null,
-      ),
-      child: Text(
-        values.text,
-        textAlign: TextAlign.center,
-        style: txtStyle,
-      ),
-    );
-  }
+  //   return Container(
+  //     alignment: Alignment.center,
+  //     decoration: BoxDecoration(
+  //       color: bgColor,
+  //       borderRadius: BorderRadius.circular(radius),
+  //       border: values.day.isSameDay(values.minDate)
+  //           ? Border.all(
+  //               color: selectedBackgroundColor ??
+  //                   Theme.of(context).colorScheme.primary,
+  //               width: 2,
+  //             )
+  //           : null,
+  //     ),
+  //     child: Text(
+  //       values.text,
+  //       textAlign: TextAlign.center,
+  //       style: txtStyle,
+  //     ),
+  //   );
+  // }
 
   Widget _beauty(BuildContext context, DayValues values) {
     BorderRadiusGeometry? borderRadius;
     Color bgColor = Colors.transparent;
+    bool isRedDay = values.isRed;
     TextStyle txtStyle =
         (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
       color: backgroundColor != null
@@ -313,27 +319,43 @@ class DaysWidget extends StatelessWidget {
     } else if (values.day.isSameDay(values.minDate)) {
     } else if (values.day.isBefore(values.minDate) ||
         values.day.isAfter(values.maxDate)) {
+      isRedDay = false;
       txtStyle = (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
         color: dayDisableColor ??
             Theme.of(context).colorScheme.onSurface.withOpacity(.5),
         decoration: TextDecoration.lineThrough,
         fontWeight: values.isFirstDayOfWeek || values.isLastDayOfWeek
-            ? FontWeight.bold
+            ? FontWeight.normal
             : null,
       );
     }
 
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: borderRadius,
-      ),
-      child: Text(
-        values.text,
-        textAlign: TextAlign.center,
-        style: txtStyle,
-      ),
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: borderRadius,
+          ),
+          child: Text(
+            values.text,
+            textAlign: TextAlign.center,
+            style: txtStyle,
+          ),
+        ),
+        isRedDay ? const SizedBox(height: 5) : const SizedBox.shrink(),
+        isRedDay
+            ? Container(
+                width: 5,
+                height: 5,
+                decoration:  BoxDecoration(
+                  color: redDayColor,
+                  shape: BoxShape.circle,
+                ),
+              )
+            : const SizedBox.shrink()
+      ],
     );
   }
 }

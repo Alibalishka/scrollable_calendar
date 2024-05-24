@@ -83,11 +83,17 @@ class ScrollableCleanCalendar extends StatefulWidget {
   /// The MutiSelect Option
   final bool isMultiSelect;
 
+  /// Red Days in Calnendar
+  final List<DateTime>? redDays;
+
+  /// Red Day container color
+  final Color? redDayColor;
+
   const ScrollableCleanCalendar({
     this.locale = 'en',
     this.scrollController,
     this.showWeekdays = true,
-    this.layout,
+    this.layout = Layout.BEAUTY,
     this.calendarCrossAxisSpacing = 4,
     this.calendarMainAxisSpacing = 4,
     this.spaceBetweenCalendars = 24,
@@ -108,6 +114,8 @@ class ScrollableCleanCalendar extends StatefulWidget {
     this.dayRadius = 6,
     required this.calendarController,
     this.isMultiSelect = false,
+    this.redDays,
+    this.redDayColor = Colors.black,
   }) : assert(layout != null ||
             (monthBuilder != null &&
                 weekdayBuilder != null &&
@@ -217,6 +225,9 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
                   radius: widget.dayRadius,
                   textStyle: widget.dayTextStyle,
                   isMultiSelect: widget.isMultiSelect,
+                  redDays:
+                      widget.redDays?.isEmpty ?? true ? [] : widget.redDays!,
+                  redDayColor: widget.redDayColor ?? Colors.black,
                 );
               },
             )

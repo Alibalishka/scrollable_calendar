@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:scrollable_clean_calendar/controllers/clean_calendar_controller.dart';
 import 'package:scrollable_clean_calendar/scrollable_clean_calendar.dart';
 import 'package:scrollable_clean_calendar/utils/enums.dart';
@@ -7,7 +10,12 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final calendarController = CleanCalendarController(
     minDate: DateTime.now(),
     maxDate: DateTime.now().add(const Duration(days: 365)),
@@ -24,6 +32,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<DateTime> redDates = [
+      DateFormat("dd.MM.yyyy").parse('21.05.2024'),
+      DateFormat("dd.MM.yyyy").parse('22.05.2024'),
+      DateFormat("dd.MM.yyyy").parse('23.05.2024'),
+      DateFormat("dd.MM.yyyy").parse('24.05.2024'),
+      DateFormat("dd.MM.yyyy").parse('25.05.2024'),
+      DateFormat("dd.MM.yyyy").parse('26.05.2024'),
+    ];
     return MaterialApp(
       title: 'Scrollable Clean Calendar',
       theme: ThemeData(
@@ -63,10 +79,9 @@ class MyApp extends StatelessWidget {
         // ),
         body: ScrollableCleanCalendar(
           calendarController: calendarController,
-          layout: Layout.BEAUTY,
           calendarCrossAxisSpacing: 0,
           isMultiSelect: true,
-          // dayRadius: 100,
+          redDays: redDates,
         ),
       ),
     );

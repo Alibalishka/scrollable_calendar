@@ -30,6 +30,9 @@ class DayValues {
   /// The max date
   final DateTime maxDate;
 
+  /// The isRed date
+  final bool isRed;
+
   DayValues({
     required this.day,
     required this.text,
@@ -41,5 +44,6 @@ class DayValues {
     this.selectedMaxDate,
     required this.minDate,
     required this.maxDate,
+    required this.isRed,
   });
 }
