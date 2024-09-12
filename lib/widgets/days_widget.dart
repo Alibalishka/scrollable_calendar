@@ -231,7 +231,10 @@ class DaysWidget extends StatelessWidget {
 
   Widget _beauty(BuildContext context, DayValues values) {
     BorderRadiusGeometry? borderRadius;
+    BorderRadiusGeometry? borderRadiusbgSecond;
+    Gradient? boxGradient;
     Color bgColor = Colors.transparent;
+    Color colorbgSecond = Colors.transparent;
     bool isRedDay = values.isRed;
     TextStyle txtStyle =
         (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
@@ -247,14 +250,22 @@ class DaysWidget extends StatelessWidget {
 
     if (values.isSelected) {
       if (values.isFirstDayOfWeek) {
-        borderRadius = BorderRadius.only(
-          topLeft: Radius.circular(radius),
-          bottomLeft: Radius.circular(radius),
+        boxGradient = LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.primary.withOpacity(0.0)
+          ],
+          begin: Alignment.centerRight,
+          end: Alignment.centerLeft,
         );
       } else if (values.isLastDayOfWeek) {
-        borderRadius = BorderRadius.only(
-          topRight: Radius.circular(radius),
-          bottomRight: Radius.circular(radius),
+        boxGradient = LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.primary.withOpacity(0.0)
+          ],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
         );
       }
 
@@ -264,6 +275,8 @@ class DaysWidget extends StatelessWidget {
               values.day.isSameDay(values.selectedMaxDate!))) {
         bgColor =
             selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
+        colorbgSecond = selectedBackgroundColor ??
+            Theme.of(context).colorScheme.primary.withOpacity(.3);
         txtStyle =
             (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
           color: selectedBackgroundColor != null
@@ -273,12 +286,17 @@ class DaysWidget extends StatelessWidget {
               : Theme.of(context).colorScheme.onPrimary,
           fontWeight: FontWeight.bold,
         );
-
         if (values.selectedMinDate == values.selectedMaxDate) {
           borderRadius = BorderRadius.circular(radius);
         } else if (values.selectedMinDate != null &&
             values.day.isSameDay(values.selectedMinDate!)) {
           borderRadius = BorderRadius.only(
+            topLeft: Radius.circular(radius),
+            bottomLeft: Radius.circular(radius),
+            topRight: Radius.circular(radius),
+            bottomRight: Radius.circular(radius),
+          );
+          borderRadiusbgSecond = BorderRadius.only(
             topLeft: Radius.circular(radius),
             bottomLeft: Radius.circular(radius),
           );
@@ -287,11 +305,20 @@ class DaysWidget extends StatelessWidget {
           borderRadius = BorderRadius.only(
             topRight: Radius.circular(radius),
             bottomRight: Radius.circular(radius),
+            topLeft: Radius.circular(radius),
+            bottomLeft: Radius.circular(radius),
+          );
+          borderRadiusbgSecond = BorderRadius.only(
+            topRight: Radius.circular(radius),
+            bottomRight: Radius.circular(radius),
           );
         }
       } else {
         if (isMultiSelect) {
           borderRadius = BorderRadius.all(Radius.circular(radius));
+
+          colorbgSecond = selectedBackgroundColorBetween ??
+              Theme.of(context).colorScheme.primary.withOpacity(.3);
           bgColor =
               selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
           txtStyle = txtStyle =
@@ -304,8 +331,15 @@ class DaysWidget extends StatelessWidget {
             fontWeight: FontWeight.bold,
           );
         } else {
-          bgColor = selectedBackgroundColorBetween ??
-              Theme.of(context).colorScheme.primary.withOpacity(.3);
+          if (values.isLastDayOfWeek ||
+              (values.isFirstDayOfWeek &&
+                  values.day.weekday == DateTime.monday)) {
+            bgColor = selectedBackgroundColorBetween ??
+                Theme.of(context).colorScheme.primary.withOpacity(.3);
+          } else {
+            bgColor = selectedBackgroundColorBetween ??
+                Theme.of(context).colorScheme.primary.withOpacity(.3);
+          }
           txtStyle =
               (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
             color: selectedBackgroundColor ??
@@ -322,7 +356,7 @@ class DaysWidget extends StatelessWidget {
       isRedDay = false;
       txtStyle = (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
         color: dayDisableColor ??
-            Theme.of(context).colorScheme.onSurface.withOpacity(.5),
+            Theme.of(context).colorScheme.onSurface.withOpacity(.4),
         decoration: TextDecoration.lineThrough,
         fontWeight: values.isFirstDayOfWeek || values.isLastDayOfWeek
             ? FontWeight.normal
@@ -333,15 +367,25 @@ class DaysWidget extends StatelessWidget {
     return Column(
       children: [
         Container(
-          alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: borderRadius,
+            color: colorbgSecond,
+            borderRadius: borderRadiusbgSecond,
           ),
-          child: Text(
-            values.text,
-            textAlign: TextAlign.center,
-            style: txtStyle,
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(
+              vertical: 18,
+            ),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: borderRadius,
+              gradient: boxGradient,
+            ),
+            child: Text(
+              values.text,
+              textAlign: TextAlign.center,
+              style: txtStyle,
+            ),
           ),
         ),
         isRedDay ? const SizedBox(height: 5) : const SizedBox.shrink(),
@@ -349,7 +393,7 @@ class DaysWidget extends StatelessWidget {
             ? Container(
                 width: 5,
                 height: 5,
-                decoration:  BoxDecoration(
+                decoration: BoxDecoration(
                   color: redDayColor,
                   shape: BoxShape.circle,
                 ),

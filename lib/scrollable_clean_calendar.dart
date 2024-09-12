@@ -111,7 +111,7 @@ class ScrollableCleanCalendar extends StatefulWidget {
     this.dayDisableBackgroundColor,
     this.dayDisableColor,
     this.dayTextStyle,
-    this.dayRadius = 6,
+    this.dayRadius = 99,
     required this.calendarController,
     this.isMultiSelect = false,
     this.redDays,

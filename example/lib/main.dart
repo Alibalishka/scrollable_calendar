@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
         body: ScrollableCleanCalendar(
           calendarController: calendarController,
           calendarCrossAxisSpacing: 0,
-          isMultiSelect: true,
+          isMultiSelect: false,
           redDays: redDates,
         ),
       ),
