@@ -319,6 +319,7 @@ class DaysWidget extends StatelessWidget {
 
           colorbgSecond = selectedBackgroundColorBetween ??
               Theme.of(context).colorScheme.primary.withOpacity(.3);
+          colorbgSecond = Colors.transparent;
           bgColor =
               selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
           txtStyle = txtStyle =
