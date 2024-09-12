@@ -275,7 +275,7 @@ class DaysWidget extends StatelessWidget {
               values.day.isSameDay(values.selectedMaxDate!))) {
         bgColor =
             selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
-        colorbgSecond = selectedBackgroundColor ??
+        colorbgSecond = selectedBackgroundColorBetween ??
             Theme.of(context).colorScheme.primary.withOpacity(.3);
         txtStyle =
             (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
@@ -316,9 +316,6 @@ class DaysWidget extends StatelessWidget {
       } else {
         if (isMultiSelect) {
           borderRadius = BorderRadius.all(Radius.circular(radius));
-
-          colorbgSecond = selectedBackgroundColorBetween ??
-              Theme.of(context).colorScheme.primary.withOpacity(.3);
           colorbgSecond = Colors.transparent;
           bgColor =
               selectedBackgroundColor ?? Theme.of(context).colorScheme.primary;
@@ -368,15 +365,13 @@ class DaysWidget extends StatelessWidget {
     return Column(
       children: [
         Container(
+          height: 30,
           decoration: BoxDecoration(
             color: colorbgSecond,
             borderRadius: borderRadiusbgSecond,
           ),
           child: Container(
             alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(
-              vertical: 18,
-            ),
             decoration: BoxDecoration(
               color: bgColor,
               borderRadius: borderRadius,

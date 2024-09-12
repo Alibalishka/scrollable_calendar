@@ -61,7 +61,18 @@ class _MyAppState extends State<MyApp> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Scrollable Clean Calendar'),
+          title: InkWell(
+            onTap: () async {
+              await HomeBottomSheet.buildCalendarBottomSheet(
+                context: context,
+                calendarController: calendarController,
+                dateList: redDates,
+              );
+            },
+            child: const Text(
+              'Scrollable Clean Calendar',
+            ),
+          ),
           actions: [
             IconButton(
               onPressed: () {
@@ -80,9 +91,90 @@ class _MyAppState extends State<MyApp> {
         body: ScrollableCleanCalendar(
           calendarController: calendarController,
           calendarCrossAxisSpacing: 0,
+          calendarMainAxisSpacing: 0,
           isMultiSelect: false,
           redDays: redDates,
         ),
+      ),
+    );
+  }
+}
+
+class HomeBottomSheet {
+  static Future<dynamic> buildCalendarBottomSheet({
+    required BuildContext context,
+    required CleanCalendarController calendarController,
+    required List<DateTime>? dateList,
+  }) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          calendarController.addListener(() => setState(() {}));
+          return DraggableScrollableSheet(
+            initialChildSize: 0.7,
+            minChildSize: 0.2,
+            maxChildSize: 0.7,
+            expand: false,
+            builder: (_, controller) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: 24,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: GestureDetector(
+                            onTap: () => {},
+                            child: Text(
+                              'Назад',
+                              textAlign: TextAlign.end,
+                              // style: AppTextStyles.buttonText
+                              //     .copyWith(color: AppColors.secondaryColor400),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Выберите даты',
+                            // style: AppTextStyles.heading7
+                            //     .copyWith(color: AppColors.color3E4157),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: ScrollableCleanCalendar(
+                        calendarController: calendarController,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                        ),
+                        calendarCrossAxisSpacing: 12,
+                        isMultiSelect: false,
+                        spaceBetweenCalendars: 16,
+                        redDays: dateList,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 1.6),
+                  const SizedBox(height: 2.4),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
