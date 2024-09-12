@@ -252,8 +252,10 @@ class DaysWidget extends StatelessWidget {
       if (values.isFirstDayOfWeek) {
         boxGradient = LinearGradient(
           colors: [
-            Theme.of(context).colorScheme.primary,
-            Theme.of(context).colorScheme.primary.withOpacity(0.0)
+            selectedBackgroundColorBetween ??
+                Theme.of(context).colorScheme.primary,
+            selectedBackgroundColorBetween?.withOpacity(0.0) ??
+                Theme.of(context).colorScheme.primary.withOpacity(0.0)
           ],
           begin: Alignment.centerRight,
           end: Alignment.centerLeft,
@@ -261,8 +263,10 @@ class DaysWidget extends StatelessWidget {
       } else if (values.isLastDayOfWeek) {
         boxGradient = LinearGradient(
           colors: [
-            Theme.of(context).colorScheme.primary,
-            Theme.of(context).colorScheme.primary.withOpacity(0.0)
+            selectedBackgroundColorBetween ??
+                Theme.of(context).colorScheme.primary,
+            selectedBackgroundColorBetween?.withOpacity(0.0) ??
+                Theme.of(context).colorScheme.primary.withOpacity(0.0)
           ],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,

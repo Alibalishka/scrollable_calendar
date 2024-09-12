@@ -94,6 +94,9 @@ class _MyAppState extends State<MyApp> {
           calendarMainAxisSpacing: 0,
           isMultiSelect: false,
           redDays: redDates,
+          daySelectedBackgroundColor: Color(0xFF3E4157),
+          daySelectedBackgroundColorBetween: Color(0xFFE7E7E7),
+          dayDisableColor: Color(0xFF9198AF),
         ),
       ),
     );
