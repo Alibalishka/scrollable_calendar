@@ -249,29 +249,29 @@ class DaysWidget extends StatelessWidget {
     );
 
     if (values.isSelected) {
-      if (values.isFirstDayOfWeek) {
-        boxGradient = LinearGradient(
-          colors: [
-            selectedBackgroundColorBetween ??
-                Theme.of(context).colorScheme.primary,
-            selectedBackgroundColorBetween?.withOpacity(0.0) ??
-                Theme.of(context).colorScheme.primary.withOpacity(0.0)
-          ],
-          begin: Alignment.centerRight,
-          end: Alignment.centerLeft,
-        );
-      } else if (values.isLastDayOfWeek) {
-        boxGradient = LinearGradient(
-          colors: [
-            selectedBackgroundColorBetween ??
-                Theme.of(context).colorScheme.primary,
-            selectedBackgroundColorBetween?.withOpacity(0.0) ??
-                Theme.of(context).colorScheme.primary.withOpacity(0.0)
-          ],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        );
-      }
+      // if (values.isFirstDayOfWeek) {
+      //   boxGradient = LinearGradient(
+      //     colors: [
+      //       selectedBackgroundColorBetween ??
+      //           Theme.of(context).colorScheme.primary,
+      //       selectedBackgroundColorBetween?.withOpacity(0.0) ??
+      //           Theme.of(context).colorScheme.primary.withOpacity(0.0)
+      //     ],
+      //     begin: Alignment.centerRight,
+      //     end: Alignment.centerLeft,
+      //   );
+      // } else if (values.isLastDayOfWeek) {
+      //   boxGradient = LinearGradient(
+      //     colors: [
+      //       selectedBackgroundColorBetween ??
+      //           Theme.of(context).colorScheme.primary,
+      //       selectedBackgroundColorBetween?.withOpacity(0.0) ??
+      //           Theme.of(context).colorScheme.primary.withOpacity(0.0)
+      //     ],
+      //     begin: Alignment.centerLeft,
+      //     end: Alignment.centerRight,
+      //   );
+      // }
 
       if ((values.selectedMinDate != null &&
               values.day.isSameDay(values.selectedMinDate!)) ||
@@ -341,6 +341,29 @@ class DaysWidget extends StatelessWidget {
           } else {
             bgColor = selectedBackgroundColorBetween ??
                 Theme.of(context).colorScheme.primary.withOpacity(.3);
+          }
+          if (values.isFirstDayOfWeek) {
+            boxGradient = LinearGradient(
+              colors: [
+                selectedBackgroundColorBetween ??
+                    Theme.of(context).colorScheme.primary,
+                selectedBackgroundColorBetween?.withOpacity(0.0) ??
+                    Theme.of(context).colorScheme.primary.withOpacity(0.0)
+              ],
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+            );
+          } else if (values.isLastDayOfWeek) {
+            boxGradient = LinearGradient(
+              colors: [
+                selectedBackgroundColorBetween ??
+                    Theme.of(context).colorScheme.primary,
+                selectedBackgroundColorBetween?.withOpacity(0.0) ??
+                    Theme.of(context).colorScheme.primary.withOpacity(0.0)
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            );
           }
           txtStyle =
               (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
